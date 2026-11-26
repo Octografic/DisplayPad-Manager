@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src data:; img-src data: blob:; style-src 'self'; script-src 'self'">
+<title>DisplayPad Manager</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>DisplayPad Manager</h1>
+  <div id="status" class="status off"><span class="dot"></span><span id="statusText" data-i18n="noDevice"></span></div>
+  <div class="spacer"></div>
+  <label><span data-i18n="profile"></span>
+    <select id="profileSelect"></select>
+  </label>
+  <input id="profileName" maxlength="40" data-i18n-title="profileName">
+  <button id="btnNewProfile" data-i18n-title="newProfile">＋</button>
+  <button id="btnDupProfile" data-i18n-title="duplicate">⧉</button>
+  <button id="btnDelProfile" data-i18n-title="delProfile" class="danger">🗑</button>
+  <span class="sep"></span>
+  <button id="btnImport" data-i18n="import"></button>
+  <button id="btnExport" data-i18n="export"></button>
+  <span class="sep"></span>
+  <div class="flags">
+    <button class="flag" data-lang="en" title="English" aria-label="English"><svg viewBox="0 0 60 30" width="26" height="13"><clipPath id="c"><path d="M0 0v30h60V0z"/></clipPath><g clip-path="url(#c)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="2.5"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></g></svg></button>
+    <button class="flag" data-lang="fr" title="Français" aria-label="Français"><svg viewBox="0 0 3 2" width="20" height="13"><path fill="#002395" d="M0 0h1v2H0z"/><path fill="#fff" d="M1 0h1v2H1z"/><path fill="#ED2939" d="M2 0h1v2H2z"/></svg></button>
+    <button class="flag" data-lang="es" title="Español" aria-label="Español"><svg viewBox="0 0 3 2" width="20" height="13"><path fill="#AA151B" d="M0 0h3v2H0z"/><path fill="#F1BF00" d="M0 .5h3v1H0z"/></svg></button>
+  </div>
+</header>
+
+<nav class="pages">
+  <label><span data-i18n="page"></span> <select id="pageSelect"></select></label>
+  <input id="pageName" maxlength="40" data-i18n-title="pageName">
+  <button id="btnNewPage" data-i18n="addPage"></button>
+  <button id="btnDelPage" class="danger" data-i18n-title="delPage">🗑</button>
+  <span class="sep"></span>
+  <label><input type="checkbox" id="optGlobal"> <span data-i18n="globalImg"></span></label>
+  <button id="btnGlobal" data-i18n="pickGlobal" hidden></button>
+  <button id="btnClearGlobal" class="danger" data-i18n="remove" hidden></button>
+  <input type="file" id="globalFile" accept="image/png,image/jpeg,image/bmp,image/webp" hidden>
+  <div class="spacer"></div>
+  <button id="btnOpenDir" data-i18n="openDir"></button>
+</nav>
+
+<div id="hint" class="hint" data-i18n="hint" hidden></div>
+
+<main>
+  <section class="pad-wrap">
+    <div id="pad" class="pad" role="grid" aria-label="DisplayPad"></div>
+    <p class="muted" data-i18n="padHelp"></p>
+    <div class="settings">
+      <label><input type="checkbox" id="optAutostart"> <span data-i18n="autostart"></span></label>
+      <label><input type="checkbox" id="optHidden"> <span data-i18n="startHidden"></span></label>
+    </div>
+  </section>
+
+  <aside id="editor" class="editor" hidden>
+    <h2><span data-i18n="key"></span> <span id="keyNum"></span></h2>
+
+    <fieldset>
+      <legend data-i18n="image"></legend>
+      <p id="globalNote" class="muted" data-i18n="globalNote" hidden></p>
+      <div id="keyImgBox">
+      <div id="drop" class="drop" tabindex="0"><span data-i18n="drop"></span><br><small data-i18n="dropSub"></small></div>
+      <input type="file" id="file" accept="image/png,image/jpeg,image/gif,image/bmp,image/webp" hidden>
+      <div class="row">
+        <button id="btnPick" data-i18n="pickFile"></button>
+        <button id="btnClearImg" class="danger" data-i18n="clearImg"></button>
+      </div>
+      </div>
+      <div class="row"><label><span data-i18n="background"></span> <input type="color" id="bg"></label></div>
+    </fieldset>
+
+    <fieldset>
+      <legend data-i18n="text"></legend>
+      <div class="row">
+        <input id="label" maxlength="40" data-i18n-ph="labelPh">
+        <input type="color" id="textColor" data-i18n-title="textColor">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend data-i18n="action"></legend>
+      <select id="actionType">
+        <option value="none" data-i18n="actNone"></option>
+        <option value="shortcut" data-i18n="actShortcut"></option>
+        <option value="launch" data-i18n="actLaunch"></option>
+        <option value="url" data-i18n="actUrl"></option>
+        <option value="page" data-i18n="actPage"></option>
+        <option value="profile" data-i18n="actProfile"></option>
+      </select>
+      <div id="actShortcut" class="act" hidden>
+        <input id="shortcutBox" readonly data-i18n-ph="shortcutPh">
+        <select id="mediaKey">
+          <option value="" data-i18n="mediaPh"></option>
+          <option value="playpause" data-mk></option>
+          <option value="nexttrack" data-mk></option>
+          <option value="prevtrack" data-mk></option>
+          <option value="stopmedia" data-mk></option>
+          <option value="volumeup">Volume +</option>
+          <option value="volumedown">Volume −</option>
+          <option value="mute" data-mk></option>
+        </select>
+        <p class="muted" data-i18n="shortcutNote"></p>
+      </div>
+      <div id="actLaunch" class="act" hidden>
+        <div class="row"><input id="launchPath" data-i18n-ph="launchPh"><button id="btnBrowse" data-i18n="browse"></button></div>
+        <input id="launchArgs" data-i18n-ph="argsPh">
+      </div>
+      <div id="actUrl" class="act" hidden>
+        <input id="urlInput" data-i18n-ph="urlPh">
+        <p id="urlWarn" class="warn" data-i18n="urlWarn" hidden></p>
+      </div>
+      <div id="actPage" class="act" hidden><select id="pageTarget"></select></div>
+      <div id="actProfile" class="act" hidden><select id="profileTarget"></select></div>
+    </fieldset>
+
+    <div class="row">
+      <button id="btnTest" data-i18n="test"></button>
+      <button id="btnResetKey" class="danger" data-i18n="resetKey"></button>
+    </div>
+  </aside>
+</main>
+<canvas id="work" width="104" height="104" hidden></canvas>
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

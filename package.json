@@ -1,0 +1,73 @@
+{
+  "name": "displaypad-manager",
+  "version": "1.2.1",
+  "description": "DisplayPad Manager",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/unit.js && node test/device-queue.js",
+    "dist": "electron-builder --win --x64"
+  },
+  "keywords": [],
+  "author": "DisplayPad Manager",
+  "license": "MIT",
+  "dependencies": {
+    "mountain-displaypad": "^1.1.1",
+    "node-hid": "^3.4.0"
+  },
+  "devDependencies": {
+    "electron": "^45.5.0",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "local.displaypad.manager",
+    "productName": "DisplayPad Manager",
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**",
+      "renderer/**",
+      "package.json",
+      "node_modules/**",
+      "!node_modules/node-hid/prebuilds/HID-darwin*/**",
+      "!node_modules/node-hid/prebuilds/HID-linux*/**",
+      "!node_modules/node-hid/prebuilds/HID_hidraw*/**",
+      "!node_modules/node-hid/prebuilds/HID-win32-ia32/**",
+      "!node_modules/node-hid/prebuilds/HID-win32-arm64/**",
+      "!node_modules/node-hid/src/**",
+      "!node_modules/node-hid/hidapi/**"
+    ],
+    "asarUnpack": [
+      "node_modules/node-hid/prebuilds/HID-win32-x64/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": true,
+      "icon": "build/icon.ico"
+    },
+    "portable": {
+      "artifactName": "DisplayPad-Manager-portable.exe"
+    },
+    "npmRebuild": false,
+    "buildDependenciesFromSource": false,
+    "copyright": "MIT - DisplayPad Manager contributors",
+    "electronLanguages": [
+      "en-US",
+      "fr",
+      "es"
+    ]
+  }
+}
